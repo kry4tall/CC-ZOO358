@@ -87,16 +87,15 @@ public class Follower extends Learner{
                             + " is less than our accepted epoch " + ZxidUtils.zxidToString(self.getAcceptedEpoch()));
                     throw new IOException("Error: Epoch of leader is lower");
                 }
-                //System.out.println(self.getId() + " a last queued: " + lastQueued);
                 syncWithLeader(newEpochZxid);                
                 QuorumPacket qp = new QuorumPacket();
                 while (this.isRunning()) {
                     readPacket(qp);
                     processPacket(qp);
-                    //System.out.println(self.getId() + " b last queued: " + lastQueued);
                 }
             } catch (Exception e) {
                 LOG.warn("Exception when following the leader", e);
+                System.out.println("Exception when following the leader: " + e.getMessage());
                 System.out.println(self.getId() + " no running");
                 try {
                     sock.close();
@@ -118,14 +117,19 @@ public class Follower extends Learner{
      * @throws IOException
      */
     protected void processPacket(QuorumPacket qp) throws Exception{
+        if(qp.getZxid() == 8589934593L)
+            System.out.println("good");
         switch (qp.getType()) {
         case Leader.PING:
-            //System.out.println(self.getId() + " ping");
             ping(qp);            
             break;
         case Leader.PROPOSAL:
+            if(qp.getZxid() == 8589934593L)
+                System.out.println(self.getId() + " receive proposal:"+ qp.getZxid());
             TxnHeader hdr = new TxnHeader();
             Record txn = SerializeUtils.deserializeTxn(qp.getData(), hdr);
+            if(qp.getZxid() == 8589934593L)
+                System.out.println(self.getId() + " receive proposal:"+ qp.getZxid() + " parsing done");
             //HK
             if(TypeSelectingUtil.isContained(hdr.getType())){
                 TypeSelectingUtil.addPassedZxids(qp.getZxid());
@@ -137,6 +141,7 @@ public class Follower extends Learner{
                 DropUtil dropUtil = new DropUtil(self.getId(),"PROPOSE", qp.getZxid());
                 dropUtil.syncWrite(self.getId(),qp.getZxid(),"PROPOSE");
                 while(!dropUtil.syncRead(qp.getZxid(),"PROPOSE")){
+                    System.out.println(self.getId() + " wait for " + qp.getZxid());
                     Thread.sleep(100);
                 }
                 if(dropUtil.isToDrop(true)) {

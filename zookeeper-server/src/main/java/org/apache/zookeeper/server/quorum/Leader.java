@@ -1156,18 +1156,27 @@ public class Leader {
                 StateCollectingUtil stateCollectingUtil = new StateCollectingUtil(self.getId(), "INIT", lastProposed, "null");
                 stateCollectingUtil.generateStateContextInit(self.leader);
                 stateCollectingUtil.writeToFile();
+
+                //clean when new proposal created
+                DropUtil.deleteSyncFiles();
+                try {
+                    DropUtil.readNodeNumber();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
 
             lastProposed = p.packet.getZxid();
             outstandingProposals.put(lastProposed, p);
             sendPacket(pp);
-            //System.out.println(self.getId() + " send a proposal: "+ pp.getZxid() + " type: " + request.type);
 
             //HK
             if(TypeSelectingUtil.isContained(request.type)){
+                System.out.println(self.getId() + " send a proposal: "+ pp.getZxid() + " type: " + request.type);
                 DropUtil dropUtil = new DropUtil(self.getId(),"PROPOSE", lastProposed);
                 dropUtil.syncWrite(self.getId(),lastProposed,"PROPOSE");
                 while(!dropUtil.syncRead(lastProposed,"PROPOSE")){
+                    System.out.println(self.getId() + " wait for " + lastProposed);
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {

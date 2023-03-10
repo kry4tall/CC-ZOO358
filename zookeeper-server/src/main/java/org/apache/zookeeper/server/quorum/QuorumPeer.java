@@ -1247,33 +1247,33 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
                     }
                     break;
                 case FOLLOWING:
-                    System.out.println(myid + " following");
+                    System.out.println("Node " + myid + " is following.");
                     try {
                        LOG.info("FOLLOWING");
                         setFollower(makeFollower(logFactory));
                         follower.followLeader();
                     } catch (Exception e) {
                        LOG.warn("Unexpected exception",e);
-                        System.out.println(myid + " follower catch");
+                        //HK System.out.println(myid + " follower catch");
                     } finally {
                        follower.shutdown();
                        setFollower(null);
                        updateServerState();
-                        System.out.println(myid + " follower finally");
+                        //HK System.out.println(myid + " follower finally");
                     }
                     break;
                 case LEADING:
                     LOG.info("LEADING");
-                    System.out.println(myid + " leading");
+                    System.out.println("Node " + myid + " is leading.");
                     try {
                         setLeader(makeLeader(logFactory));
                         leader.lead();
                         setLeader(null);
                     } catch (Exception e) {
                         LOG.warn("Unexpected exception",e);
-                        System.out.println(myid + " leader catch " + e.getMessage());
+                        //HK System.out.println(myid + " leader catch " + e.getMessage());
                     } finally {
-                        System.out.println(myid + " leader finally");
+                        //HK System.out.println(myid + " leader finally");
                         if (leader != null) {
                             leader.shutdown("Forcing shutdown");
                             setLeader(null);
@@ -1302,7 +1302,7 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
 
     private synchronized void updateServerState(){
        if (!reconfigFlag) {
-           System.out.println(myid + " change to looking");
+           //HK System.out.println(myid + " change to looking");
            setPeerState(ServerState.LOOKING);
            LOG.warn("PeerState set to LOOKING");
            return;

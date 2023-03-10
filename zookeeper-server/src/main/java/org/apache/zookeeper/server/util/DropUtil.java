@@ -1,8 +1,8 @@
 package org.apache.zookeeper.server.util;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -14,11 +14,11 @@ public class DropUtil {
 
     long zxid;
 
-    static HashSet<Long> finishSyncNodeSet;
-
     static String syncFileDir;
 
     static String scenarioFilePath;
+
+    static int nodeNum;
 
     static{
         Properties properties = new Properties();
@@ -53,7 +53,7 @@ public class DropUtil {
         ArrayList<String> lines = new ArrayList<>();
         try {
             File f = new File(scenarioFilePath);
-            InputStream in = new FileInputStream(f);
+            InputStream in = Files.newInputStream(f.toPath());
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String line;
             while(true)
@@ -90,7 +90,6 @@ public class DropUtil {
     }
 
     public void syncWrite(long nodeId,long zxid, String type){
-        finishSyncNodeSet.add(nodeId);
         //make file
         try {
             String targetPath = syncFileDir + "/" + zxid + "_" + nodeId + "_" + type;
@@ -104,20 +103,20 @@ public class DropUtil {
     }
 
     public boolean syncRead(long zxid, String type){
+        int count = 0;
         for(int sid = 0;sid<3;sid++)
         {
             String targetPath = syncFileDir + "/" + zxid + "_" + sid + "_" + type;
             File file = new File(targetPath);
-            if (!file.exists()) {
-                return false;
+            if (file.exists()) {
+                count++;
             }
         }
-        //3 files exist
-        return true;
+        //enough files exist
+        return count == nodeNum;
     }
 
-    public synchronized static void deleteSyncFiles(){
-        System.out.println("ready to delete!");
+    public static void deleteSyncFiles(){
         try {
             File file = new File(syncFileDir);
             File[] listFiles = file.listFiles();
@@ -128,10 +127,16 @@ public class DropUtil {
                     f.delete();
                 }
             }
-            System.out.println("finish deleting!");
         } catch (Exception e) {
-            System.out.println("sth wrong when delete!");
-            System.out.println(e.getMessage());
+            System.out.println("Exception when delete: " + e.getMessage());
         }
+    }
+
+    public static void readNodeNumber() throws IOException {
+        Properties properties = new Properties();
+        InputStream in = ClassLoader.getSystemResourceAsStream("test.properties");
+        properties.load(in);
+        nodeNum = Integer.parseInt(properties.getProperty("nodeNum"));
+        System.out.println("Current node num is " + nodeNum + ".");
     }
 }
