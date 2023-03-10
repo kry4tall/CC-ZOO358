@@ -87,14 +87,17 @@ public class Follower extends Learner{
                             + " is less than our accepted epoch " + ZxidUtils.zxidToString(self.getAcceptedEpoch()));
                     throw new IOException("Error: Epoch of leader is lower");
                 }
+                //System.out.println(self.getId() + " a last queued: " + lastQueued);
                 syncWithLeader(newEpochZxid);                
                 QuorumPacket qp = new QuorumPacket();
                 while (this.isRunning()) {
                     readPacket(qp);
                     processPacket(qp);
+                    //System.out.println(self.getId() + " b last queued: " + lastQueued);
                 }
             } catch (Exception e) {
                 LOG.warn("Exception when following the leader", e);
+                System.out.println(self.getId() + " no running");
                 try {
                     sock.close();
                 } catch (IOException e1) {
@@ -117,6 +120,7 @@ public class Follower extends Learner{
     protected void processPacket(QuorumPacket qp) throws Exception{
         switch (qp.getType()) {
         case Leader.PING:
+            //System.out.println(self.getId() + " ping");
             ping(qp);            
             break;
         case Leader.PROPOSAL:

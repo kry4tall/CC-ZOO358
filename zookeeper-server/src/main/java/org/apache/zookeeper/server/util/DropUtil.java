@@ -2,6 +2,7 @@ package org.apache.zookeeper.server.util;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -12,6 +13,8 @@ public class DropUtil {
     int type; // PROPOSE | ACK | COMMIT
 
     long zxid;
+
+    static HashSet<Long> finishSyncNodeSet;
 
     static String syncFileDir;
 
@@ -87,6 +90,7 @@ public class DropUtil {
     }
 
     public void syncWrite(long nodeId,long zxid, String type){
+        finishSyncNodeSet.add(nodeId);
         //make file
         try {
             String targetPath = syncFileDir + "/" + zxid + "_" + nodeId + "_" + type;
@@ -112,7 +116,7 @@ public class DropUtil {
         return true;
     }
 
-    public static void deleteSyncFiles(){
+    public synchronized static void deleteSyncFiles(){
         System.out.println("ready to delete!");
         try {
             File file = new File(syncFileDir);

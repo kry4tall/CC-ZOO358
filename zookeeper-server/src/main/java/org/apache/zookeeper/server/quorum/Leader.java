@@ -1120,10 +1120,6 @@ public class Leader {
          * Address the rollover issue. All lower 32bits set indicate a new leader
          * election. Force a re-election instead. See ZOOKEEPER-1277
          */
-        //HK
-//        if(TypeSelectingUtil.isContained(request.type)){
-//            DropUtil.deleteSyncFiles();
-//        }
 
         if ((request.zxid & 0xffffffffL) == 0xffffffffL) {
             String msg =
@@ -1165,6 +1161,7 @@ public class Leader {
             lastProposed = p.packet.getZxid();
             outstandingProposals.put(lastProposed, p);
             sendPacket(pp);
+            //System.out.println(self.getId() + " send a proposal: "+ pp.getZxid() + " type: " + request.type);
 
             //HK
             if(TypeSelectingUtil.isContained(request.type)){
