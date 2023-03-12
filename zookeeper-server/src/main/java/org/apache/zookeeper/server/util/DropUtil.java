@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.CountDownLatch;
 
 public class DropUtil {
 
@@ -19,6 +20,12 @@ public class DropUtil {
     static String scenarioFilePath;
 
     static int nodeNum;
+
+    static CountDownLatch proposeCDL;
+
+    static CountDownLatch ackCDL;
+
+    static CountDownLatch commitCDL;
 
     static{
         Properties properties = new Properties();
@@ -89,31 +96,32 @@ public class DropUtil {
             return "COMMIT";
     }
 
-    public void syncWrite(long nodeId,long zxid, String type){
-        //make file
-        try {
-            String targetPath = syncFileDir + "/" + zxid + "_" + nodeId + "_" + type;
-            File file = new File(targetPath);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static void syncWrite(String type){
+        switch (type) {
+            case "PROPOSE":
+                proposeCDL.countDown();
+                break;
+            case "ACK":
+                ackCDL.countDown();
+                break;
+            case "COMMIT":
+                commitCDL.countDown();
+                break;
         }
     }
 
-    public boolean syncRead(long zxid, String type){
-        int count = 0;
-        for(int sid = 0;sid<3;sid++)
-        {
-            String targetPath = syncFileDir + "/" + zxid + "_" + sid + "_" + type;
-            File file = new File(targetPath);
-            if (file.exists()) {
-                count++;
-            }
+    public static void syncRead(String type) throws InterruptedException {
+        switch (type) {
+            case "PROPOSE":
+                proposeCDL.await();
+                break;
+            case "ACK":
+                ackCDL.await();
+                break;
+            case "COMMIT":
+                commitCDL.await();
+                break;
         }
-        //enough files exist
-        return count == nodeNum;
     }
 
     public static void deleteSyncFiles(){
@@ -137,6 +145,9 @@ public class DropUtil {
         InputStream in = ClassLoader.getSystemResourceAsStream("test.properties");
         properties.load(in);
         nodeNum = Integer.parseInt(properties.getProperty("nodeNum"));
+        proposeCDL = new CountDownLatch(nodeNum);
+        ackCDL = new CountDownLatch(nodeNum);
+        commitCDL = new CountDownLatch(nodeNum);
         System.out.println("Current node num is " + nodeNum + ".");
     }
 }

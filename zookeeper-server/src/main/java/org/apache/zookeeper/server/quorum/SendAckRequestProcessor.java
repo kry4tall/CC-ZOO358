@@ -50,13 +50,11 @@ public class SendAckRequestProcessor implements RequestProcessor, Flushable {
                 stateCollectingUtil.writeToFile();
 
                 DropUtil dropUtil = new DropUtil(learner.self.getId(),"ACK", si.getHdr().getZxid());
-                dropUtil.syncWrite(learner.self.getId(),si.getHdr().getZxid(),"ACK");
-                while(!dropUtil.syncRead(si.getHdr().getZxid(),"ACK")){
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                DropUtil.syncWrite("ACK");
+                try {
+                    DropUtil.syncRead("ACK");
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
                 if(dropUtil.isToDrop(true))
                     return;

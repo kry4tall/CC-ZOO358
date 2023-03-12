@@ -836,13 +836,11 @@ public class Leader {
                 stateCollectingUtil.writeToFile();
 
                 DropUtil dropUtil = new DropUtil(self.getId(), "COMMIT", zxid);
-                dropUtil.syncWrite(self.getId(), zxid, "COMMIT");
-                while (!dropUtil.syncRead(zxid, "COMMIT")) {
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                DropUtil.syncWrite("COMMIT");
+                try {
+                    DropUtil.syncRead("COMMIT");
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
                 if(dropUtil.isToDrop(true))
                     dropFlag = true;
@@ -1157,8 +1155,8 @@ public class Leader {
                 stateCollectingUtil.generateStateContextInit(self.leader);
                 stateCollectingUtil.writeToFile();
 
-                //clean when new proposal created
-                DropUtil.deleteSyncFiles();
+                // new proposal created
+                // DropUtil.deleteSyncFiles();
                 try {
                     DropUtil.readNodeNumber();
                 } catch (IOException e) {
@@ -1174,18 +1172,15 @@ public class Leader {
             if(TypeSelectingUtil.isContained(request.type)){
                 System.out.println(self.getId() + " send a proposal: "+ pp.getZxid() + " type: " + request.type);
                 DropUtil dropUtil = new DropUtil(self.getId(),"PROPOSE", lastProposed);
-                dropUtil.syncWrite(self.getId(),lastProposed,"PROPOSE");
-                while(!dropUtil.syncRead(lastProposed,"PROPOSE")){
-                    System.out.println(self.getId() + " wait for " + lastProposed);
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                DropUtil.syncWrite("PROPOSE");
+                try {
+                    DropUtil.syncRead("PROPOSE");
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
                 if(dropUtil.isToDrop(true)) {
                     outstandingProposals.remove(lastProposed);
-                    dropUtil.syncWrite(self.getId(),lastProposed,"ACK");
+                    DropUtil.syncWrite("ACK");
                 }
             }
         }

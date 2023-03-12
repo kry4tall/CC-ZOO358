@@ -139,13 +139,14 @@ public class Follower extends Learner{
                 stateCollectingUtil.writeToFile();
 
                 DropUtil dropUtil = new DropUtil(self.getId(),"PROPOSE", qp.getZxid());
-                dropUtil.syncWrite(self.getId(),qp.getZxid(),"PROPOSE");
-                while(!dropUtil.syncRead(qp.getZxid(),"PROPOSE")){
-                    System.out.println(self.getId() + " wait for " + qp.getZxid());
-                    Thread.sleep(100);
+                DropUtil.syncWrite("PROPOSE");
+                try {
+                    DropUtil.syncRead("PROPOSE");
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
                 if(dropUtil.isToDrop(true)) {
-                    dropUtil.syncWrite(self.getId(),qp.getZxid(),"ACK");
+                    DropUtil.syncWrite("ACK");
                     break;
                 }
             }
@@ -170,9 +171,11 @@ public class Follower extends Learner{
             //HK
             if(TypeSelectingUtil.isZxidPassed(qp.getZxid())){
                 DropUtil dropUtil1 = new DropUtil(self.getId(),"COMMIT", qp.getZxid());
-                dropUtil1.syncWrite(self.getId(),qp.getZxid(),"COMMIT");
-                while(!dropUtil1.syncRead(qp.getZxid(),"COMMIT")){
-                    Thread.sleep(100);
+                DropUtil.syncWrite("COMMIT");
+                try {
+                    DropUtil.syncRead("COMMIT");
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
                 if(dropUtil1.isToDrop(true))
                     break;

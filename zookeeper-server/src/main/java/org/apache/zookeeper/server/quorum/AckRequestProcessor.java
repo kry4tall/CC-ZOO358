@@ -54,13 +54,11 @@ class AckRequestProcessor implements RequestProcessor {
                 stateCollectingUtil.writeToFile();
 
                 DropUtil dropUtil = new DropUtil(self.getId(),"ACK", request.zxid);
-                dropUtil.syncWrite(self.getId(),request.zxid,"ACK");
-                while(!dropUtil.syncRead(request.zxid,"ACK")){
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                DropUtil.syncWrite("ACK");
+                try {
+                    DropUtil.syncRead("ACK");
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
                 if(dropUtil.isToDrop(true))
                     return;
