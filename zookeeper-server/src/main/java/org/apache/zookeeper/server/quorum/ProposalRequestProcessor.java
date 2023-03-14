@@ -81,11 +81,6 @@ public class ProposalRequestProcessor implements RequestProcessor {
                 } catch (XidRolloverException e) {
                     throw new RequestProcessorException(e.getMessage(), e);
                 }
-                if(TypeSelectingUtil.isContained(request.type)) {
-                    DropUtil dropUtil = new DropUtil(zks.getLeader().self.getId(), "PROPOSE", request.zxid);
-                    if (dropUtil.isToDrop(false))
-                        return;
-                }
                 syncProcessor.processRequest(request);
             }
         }
