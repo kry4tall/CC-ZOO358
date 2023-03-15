@@ -24,28 +24,17 @@ public class ZooTester {
                 case "divergence-2":
                     scenario = new DivergenceResyncScenario2();
                     break;
-                case "failure-sc":
-                    scenario = new FailureSC();
+                case "divergence-3":
+                    scenario = new DivergenceResyncScenario3();
                     break;
-                case "random":
-                case "paper":
-                case "interesting":
-                    scenario = new ParallelScenario();
+                case "divergence-4":
+                    scenario = new DivergenceResyncScenario4();
                     break;
-                case "harness":
-                    scenario = new RandomHarnessScenario();
+                case "divergence-5":
+                    scenario = new DivergenceResyncScenario5();
                     break;
-                case "baseline":
-                    scenario = new ParallelBaselineScenario();
-                    break;
-                case "baseline-harness-short":
-                    scenario = new ParallelBaselineHarnessShort();
-                    break;
-                case "baseline-harness-long":
-                    scenario = new ParallelBaselineHarnessLong();
-                    break;
-                case "baseline-interesting":
-                    scenario = new InterestingBaselineScenario();
+                case "divergence-6":
+                    scenario = new DivergenceResyncScenario6();
                     break;
                 default:
                     LOG.error("Unknown scenario!");

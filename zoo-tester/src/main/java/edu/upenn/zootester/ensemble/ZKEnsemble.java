@@ -84,6 +84,11 @@ public class ZKEnsemble implements Watcher {
 
     public void startAllServers() throws InterruptedException, IOException {
         startServers(allIds);
+//        for(int i = 0;i < 3;i++)
+//        {
+//            System.out.println("after start");
+//            System.out.println(clients.get(clientForServer.get(i)).getState());
+//        }
     }
 
     public boolean isRunning(final int serverId) {
@@ -125,6 +130,11 @@ public class ZKEnsemble implements Watcher {
 
     public void stopAllServers() throws InterruptedException, IOException {
         stopServers(allIds);
+//        for(int i = 0;i < 3;i++)
+//        {
+//            System.out.println("after stop");
+//            System.out.println(clients.get(clientForServer.get(i)).getState());
+//        }
     }
 
     private void waitForClients(final States state, final List<Integer> serverIds) throws InterruptedException, IOException {

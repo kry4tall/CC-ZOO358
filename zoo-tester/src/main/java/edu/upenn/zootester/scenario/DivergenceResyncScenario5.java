@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class DivergenceResyncScenario2 implements Scenario {
+public class DivergenceResyncScenario5 implements Scenario {
 
     private static final Logger LOG = LoggerFactory.getLogger(DivergenceResyncScenario2.class);
 
@@ -54,10 +54,6 @@ public class DivergenceResyncScenario2 implements Scenario {
                 Thread.sleep(500);
 //                System.gc();
             });
-
-            zkEnsemble.stopAllServers();
-            zkEnsemble.startAllServers();
-            zkEnsemble.checkProperty(CONSISTENT_VALUES);
 
             zkEnsemble.handleRequest(srvA, (zk, serverId) -> {
                 zk.setData(KEYS.get(1), "1001".getBytes(), -1, null, null);

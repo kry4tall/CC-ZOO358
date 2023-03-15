@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class DivergenceResyncScenario2 implements Scenario {
+public class DivergenceResyncScenario3 implements Scenario {
 
     private static final Logger LOG = LoggerFactory.getLogger(DivergenceResyncScenario2.class);
 
@@ -55,8 +55,6 @@ public class DivergenceResyncScenario2 implements Scenario {
 //                System.gc();
             });
 
-            zkEnsemble.stopAllServers();
-            zkEnsemble.startAllServers();
             zkEnsemble.checkProperty(CONSISTENT_VALUES);
 
             zkEnsemble.handleRequest(srvA, (zk, serverId) -> {
@@ -65,6 +63,8 @@ public class DivergenceResyncScenario2 implements Scenario {
 //                System.gc();
             });
 
+            zkEnsemble.stopAllServers();
+            zkEnsemble.startAllServers();
             final boolean result = zkEnsemble.checkProperty(CONSISTENT_VALUES);
             Assert.assertTrue("All keys on all servers should have the same value", result);
         }
