@@ -771,58 +771,60 @@ public class Leader {
         //HK
         boolean dropFlag = false;
 
-       // make sure that ops are committed in order. With reconfigurations it is now possible
-       // that different operations wait for different sets of acks, and we still want to enforce
-       // that they are committed in order. Currently we only permit one outstanding reconfiguration
-       // such that the reconfiguration and subsequent outstanding ops proposed while the reconfig is
-       // pending all wait for a quorum of old and new config, so it's not possible to get enough acks
-       // for an operation without getting enough acks for preceding ops. But in the future if multiple
-       // concurrent reconfigs are allowed, this can happen.
-       if (outstandingProposals.containsKey(zxid - 1)) return false;
-       
-       // in order to be committed, a proposal must be accepted by a quorum.
-       //
-       // getting a quorum from all necessary configurations.
+        // make sure that ops are committed in order. With reconfigurations it is now possible
+        // that different operations wait for different sets of acks, and we still want to enforce
+        // that they are committed in order. Currently we only permit one outstanding reconfiguration
+        // such that the reconfiguration and subsequent outstanding ops proposed while the reconfig is
+        // pending all wait for a quorum of old and new config, so it's not possible to get enough acks
+        // for an operation without getting enough acks for preceding ops. But in the future if multiple
+        // concurrent reconfigs are allowed, this can happen.
+
+        // HK CAN NOT COMMIT BECAUSE LAST PROPOSAL
+        if (outstandingProposals.containsKey(zxid - 1)) return false;
+
+        // in order to be committed, a proposal must be accepted by a quorum.
+        //
+        // getting a quorum from all necessary configurations.
         if (!p.hasAllQuorums()) {
-           return false;                 
+            return false;
         }
-        
+
         // commit proposals in order
-        if (zxid != lastCommitted+1) {    
-           LOG.warn("Commiting zxid 0x" + Long.toHexString(zxid)
+        if (zxid != lastCommitted+1) {
+            LOG.warn("Commiting zxid 0x" + Long.toHexString(zxid)
                     + " from " + followerAddr + " not first!");
             LOG.warn("First is "
                     + (lastCommitted+1));
-        }     
-        
+        }
+
         outstandingProposals.remove(zxid);
-        
+
         if (p.request != null) {
-             toBeApplied.add(p);
+            toBeApplied.add(p);
         }
 
         if (p.request == null) {
             LOG.warn("Going to commmit null: " + p);
-        } else if (p.request.getHdr().getType() == OpCode.reconfig) {                                   
-            LOG.debug("Committing a reconfiguration! " + outstandingProposals.size()); 
-                 
-            //if this server is voter in new config with the same quorum address, 
+        } else if (p.request.getHdr().getType() == OpCode.reconfig) {
+            LOG.debug("Committing a reconfiguration! " + outstandingProposals.size());
+
+            //if this server is voter in new config with the same quorum address,
             //then it will remain the leader
             //otherwise an up-to-date follower will be designated as leader. This saves
-            //leader election time, unless the designated leader fails                             
+            //leader election time, unless the designated leader fails
             Long designatedLeader = getDesignatedLeader(p, zxid);
             //LOG.warn("designated leader is: " + designatedLeader);
 
             QuorumVerifier newQV = p.qvAcksetPairs.get(p.qvAcksetPairs.size()-1).getQuorumVerifier();
-       
+
             self.processReconfig(newQV, designatedLeader, zk.getZxid(), true);
 
             if (designatedLeader != self.getId()) {
                 allowedToCommit = false;
             }
-                   
-            // we're sending the designated leader, and if the leader is changing the followers are 
-            // responsible for closing the connection - this way we are sure that at least a majority of them 
+
+            // we're sending the designated leader, and if the leader is changing the followers are
+            // responsible for closing the connection - this way we are sure that at least a majority of them
             // receive the commit message.
             commitAndActivate(zxid, designatedLeader);
             informAndActivate(p, designatedLeader);
@@ -860,10 +862,10 @@ public class Leader {
         if(pendingSyncs.containsKey(zxid)){
             for(LearnerSyncRequest r: pendingSyncs.remove(zxid)) {
                 sendSync(r);
-            }               
-        } 
-        
-        return  true;   
+            }
+        }
+
+        return  true;
     }
     
     /**
@@ -1151,6 +1153,7 @@ public class Leader {
 
             //HK
             if(TypeSelectingUtil.isContained(request.type)) {
+                System.out.println("Leader propose " + p.packet.getZxid());
                 StateCollectingUtil stateCollectingUtil = new StateCollectingUtil(self.getId(), "INIT", lastProposed, "null");
                 stateCollectingUtil.generateStateContextInit(self.leader);
                 stateCollectingUtil.writeToFile();
@@ -1170,7 +1173,6 @@ public class Leader {
 
             //HK
             if(TypeSelectingUtil.isContained(request.type)){
-                System.out.println(self.getId() + " send a proposal: "+ pp.getZxid() + " type: " + request.type);
                 DropUtil dropUtil = new DropUtil(self.getId(),"PROPOSE", lastProposed);
                 DropUtil.syncWrite("PROPOSE");
                 try {

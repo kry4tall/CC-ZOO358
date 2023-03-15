@@ -15,8 +15,6 @@ public class DropUtil {
 
     long zxid;
 
-    static String syncFileDir;
-
     static String scenarioFilePath;
 
     static int nodeNum;
@@ -36,7 +34,6 @@ public class DropUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        syncFileDir = properties.getProperty("sync-file-dir"); //read from config
         scenarioFilePath = properties.getProperty("scenario-file-path"); //read from config
     }
 
@@ -80,7 +77,7 @@ public class DropUtil {
         for(String line : lines) {
             if(line.equals(current)) {
                 if (stdoutFlag)
-                    System.out.println("Drop message: {sid: " + nodeId + ", type: " + typeToString(type) + ", zxid: " + zxid + "}.");
+                    System.out.println("Drop message: {sid: " + nodeId + ", type: " + typeToString(type) + ", zxid: " + zxid + "} before processing.");
                 return true;
             }
         }
@@ -124,22 +121,6 @@ public class DropUtil {
         }
     }
 
-    public static void deleteSyncFiles(){
-        try {
-            File file = new File(syncFileDir);
-            File[] listFiles = file.listFiles();
-            if(listFiles != null)
-            {
-                for(File f: listFiles)
-                {
-                    f.delete();
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Exception when delete: " + e.getMessage());
-        }
-    }
-
     public static void readNodeNumber() throws IOException {
         Properties properties = new Properties();
         InputStream in = ClassLoader.getSystemResourceAsStream("test.properties");
@@ -148,6 +129,5 @@ public class DropUtil {
         proposeCDL = new CountDownLatch(nodeNum);
         ackCDL = new CountDownLatch(nodeNum);
         commitCDL = new CountDownLatch(nodeNum);
-        System.out.println("Current node num is " + nodeNum + ".");
     }
 }

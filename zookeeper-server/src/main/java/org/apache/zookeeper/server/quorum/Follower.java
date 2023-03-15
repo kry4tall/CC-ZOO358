@@ -33,6 +33,10 @@ import org.apache.zookeeper.server.quorum.QuorumPeer.QuorumServer;
 import org.apache.zookeeper.server.util.*;
 import org.apache.zookeeper.txn.SetDataTxn;
 import org.apache.zookeeper.txn.TxnHeader;
+
+import static org.apache.zookeeper.server.TraceFormatter.op2String;
+import static org.apache.zookeeper.server.quorum.Leader.getPacketType;
+
 /**
  * This class has the control logic for the Follower.
  */
@@ -95,8 +99,7 @@ public class Follower extends Learner{
                 }
             } catch (Exception e) {
                 LOG.warn("Exception when following the leader", e);
-                System.out.println("Exception when following the leader: " + e.getMessage());
-                System.out.println(self.getId() + " no running");
+                System.out.println("Node " + self.getId() + " has exception when following the leader: " + e.getMessage());
                 try {
                     sock.close();
                 } catch (IOException e1) {
@@ -117,24 +120,20 @@ public class Follower extends Learner{
      * @throws IOException
      */
     protected void processPacket(QuorumPacket qp) throws Exception{
-        if(qp.getZxid() == 8589934593L)
-            System.out.println("good");
+        System.out.println("Node " + self.getId() + " receive message " + qp.getZxid() + ", type: " + getPacketType(qp.getType()));
         switch (qp.getType()) {
         case Leader.PING:
             ping(qp);            
             break;
         case Leader.PROPOSAL:
-            if(qp.getZxid() == 8589934593L)
-                System.out.println(self.getId() + " receive proposal:"+ qp.getZxid());
             TxnHeader hdr = new TxnHeader();
             Record txn = SerializeUtils.deserializeTxn(qp.getData(), hdr);
-            if(qp.getZxid() == 8589934593L)
-                System.out.println(self.getId() + " receive proposal:"+ qp.getZxid() + " parsing done");
+            System.out.println("Proposal{" + qp.getZxid() + "}'s type is " + op2String(hdr.getType()));
             //HK
             if(TypeSelectingUtil.isContained(hdr.getType())){
+                //System.out.println("Node " + self.getId() + " receive proposal " + qp.getZxid());
                 TypeSelectingUtil.addPassedZxids(qp.getZxid());
-
-                StateCollectingUtil stateCollectingUtil = new StateCollectingUtil(self.getId(), "INIT", qp.getZxid(), "null");
+                StateCollectingUtil stateCollectingUtil = new StateCollectingUtil(self.getId(), "INIT", lastQueued, "null");
                 stateCollectingUtil.generateStateContextInit(self.follower);
                 stateCollectingUtil.writeToFile();
 

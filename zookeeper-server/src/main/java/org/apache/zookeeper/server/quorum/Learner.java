@@ -587,7 +587,6 @@ public class Learner {
             FollowerZooKeeperServer fzk = (FollowerZooKeeperServer)zk;
             for(PacketInFlight p: packetsNotCommitted) {
                 //HK resend ack because here
-                System.out.println("HK resend ack because here");
                 fzk.logRequest(p.hdr, p.rec);
             }
             for(Long zxid: packetsCommitted) {
