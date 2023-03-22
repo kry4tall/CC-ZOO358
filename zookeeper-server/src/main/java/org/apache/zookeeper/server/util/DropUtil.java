@@ -19,6 +19,8 @@ public class DropUtil {
 
     static int nodeNum;
 
+    static int requestId;
+
     static CountDownLatch proposeCDL;
 
     static CountDownLatch ackCDL;
@@ -73,7 +75,7 @@ public class DropUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String current = nodeId +  " " + type + " " + zxid;
+        String current = nodeId +  " " + type + " " + requestId;
         for(String line : lines) {
             if(line.equals(current)) {
                 if (stdoutFlag)
@@ -126,6 +128,7 @@ public class DropUtil {
         InputStream in = ClassLoader.getSystemResourceAsStream("test.properties");
         properties.load(in);
         nodeNum = Integer.parseInt(properties.getProperty("nodeNum"));
+        requestId = Integer.parseInt(properties.getProperty("requestId"));
         proposeCDL = new CountDownLatch(nodeNum);
         ackCDL = new CountDownLatch(nodeNum);
         commitCDL = new CountDownLatch(nodeNum);
