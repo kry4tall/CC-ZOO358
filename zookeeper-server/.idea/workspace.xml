@@ -4,69 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9365620c-05c2-429c-b0d5-5381ef0f6d43" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/ZooTester.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/ensemble/QuorumPeerMainWithShutdown.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/ensemble/ZKEnsemble.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/ensemble/ZKHelper.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/ensemble/ZKNodeHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/ensemble/ZKProperty.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/ensemble/ZKRequest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/fault/AtMostFaultGenerator.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/fault/ExactFaultGenerator.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/fault/FaultGenerator.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/harness/ConditionalWritePhase.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/harness/EmptyPhase.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/harness/Harness.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/harness/HarnessIterator$Request.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/harness/HarnessIterator$RequestType.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/harness/HarnessIterator.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/harness/Phase.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/harness/RandomHarnessGenerator.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/harness/RequestPhase.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/harness/SequentialConsistency.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/harness/UnconditionalWritePhase.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/harness/VirtualWritePhase.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/scenario/DivergenceResyncScenario.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/scenario/DivergenceResyncScenario2.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/scenario/DivergenceResyncScenario3.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/scenario/DivergenceResyncScenario4.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/scenario/DivergenceResyncScenario5.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/scenario/DivergenceResyncScenario6.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/scenario/Scenario.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/subset/FixedSizeSubset.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/subset/MinimalQuorumGenerator.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/subset/QuorumComplement.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/subset/RandomSubsetGenerator.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/util/Assert.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/util/AssertionFailureError.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/util/Config.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/util/ConfigException.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/util/NodeNumUtil.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/edu/upenn/zootester/util/ThrowingFunction.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/log4j.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/log4j2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/classes/test.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/test-classes/edu/upenn/zootester/fault/FaultGeneratorTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/test-classes/edu/upenn/zootester/harness/HarnessIteratorTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/test-classes/edu/upenn/zootester/harness/HarnessTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/test-classes/edu/upenn/zootester/subset/MinimalQuorumGeneratorTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../zoo-tester/target/test-classes/edu/upenn/zootester/subset/QuorumComplementTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/apache/zookeeper/server/util/DropUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/apache/zookeeper/server/util/DropUtil.java" afterDir="false" />
-    </list>
+    <list default="true" id="9365620c-05c2-429c-b0d5-5381ef0f6d43" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -120,7 +58,7 @@
       <option name="presentableId" value="Default" />
       <updated>1679434392466</updated>
       <workItem from="1679434393607" duration="1059000" />
-      <workItem from="1679473732316" duration="1194000" />
+      <workItem from="1679473732316" duration="1229000" />
     </task>
     <servers />
   </component>
