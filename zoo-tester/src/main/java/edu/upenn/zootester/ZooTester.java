@@ -8,6 +8,8 @@ import edu.upenn.zootester.util.ConfigException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+
 public class ZooTester {
 
     private static final Logger LOG = LoggerFactory.getLogger(ZooTester.class);
@@ -15,26 +17,27 @@ public class ZooTester {
     public static void main(final String[] args) {
         try {
             final Config config = Config.parseArgs(args);
+            LOG.info("Run zoo-tester use parameters: " + Arrays.toString(args));
             ZKHelper.setBasePort(config.getBasePort());
             final Scenario scenario;
             switch (config.getScenario()) {
-                case "divergence":
-                    scenario = new DivergenceResyncScenario();
+                case "scenario-1":
+                    scenario = new Scenario1();
                     break;
-                case "divergence-2":
-                    scenario = new DivergenceResyncScenario2();
+                case "scenario-2":
+                    scenario = new Scenario2();
                     break;
-                case "divergence-3":
-                    scenario = new DivergenceResyncScenario3();
+                case "scenario-3":
+                    scenario = new Scenario3();
                     break;
-                case "divergence-4":
-                    scenario = new DivergenceResyncScenario4();
+                case "scenario-4":
+                    scenario = new Scenario4();
                     break;
-                case "divergence-5":
-                    scenario = new DivergenceResyncScenario5();
+                case "scenario-5":
+                    scenario = new Scenario5();
                     break;
-                case "divergence-6":
-                    scenario = new DivergenceResyncScenario6();
+                case "scenario-6":
+                    scenario = new Scenario6();
                     break;
                 default:
                     LOG.error("Unknown scenario!");

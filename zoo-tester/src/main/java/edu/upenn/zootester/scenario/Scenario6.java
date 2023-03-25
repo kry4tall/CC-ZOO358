@@ -5,7 +5,7 @@ import edu.upenn.zootester.ensemble.ZKProperty;
 import edu.upenn.zootester.harness.SequentialConsistency;
 import edu.upenn.zootester.util.Assert;
 import edu.upenn.zootester.util.Config;
-import edu.upenn.zootester.util.NodeNumUtil;
+import edu.upenn.zootester.util.PropertyModUtil;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs.Ids;
 import org.slf4j.Logger;
@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class DivergenceResyncScenario2 implements Scenario {
+public class Scenario6 implements Scenario {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DivergenceResyncScenario2.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Scenario2.class);
 
     private static final int TOTAL_SERVERS = 3;
 
@@ -44,27 +44,29 @@ public class DivergenceResyncScenario2 implements Scenario {
             Assert.assertTrue("There should be a leader", srvC >= 0);
 
             // Create initial znodes
-            NodeNumUtil.setNodeNum(3);
+            PropertyModUtil.setNodeNum(3);
+            PropertyModUtil.setRequestId(0);
             zkEnsemble.handleRequest(srvC, (zk, serverId) -> {
                 zk.create(KEYS.get(0), "0".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
                 zk.create(KEYS.get(1), "1".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
             });
+
+            PropertyModUtil.setRequestId(1);
             zkEnsemble.handleRequest(srvB, (zk, serverId) -> {
                 zk.setData(KEYS.get(0), "1000".getBytes(), -1, null, null);
                 Thread.sleep(500);
 //                System.gc();
             });
 
-            zkEnsemble.stopAllServers();
-            zkEnsemble.startAllServers();
-            zkEnsemble.checkProperty(CONSISTENT_VALUES);
-
+            PropertyModUtil.setRequestId(2);
             zkEnsemble.handleRequest(srvA, (zk, serverId) -> {
                 zk.setData(KEYS.get(1), "1001".getBytes(), -1, null, null);
                 Thread.sleep(500);
 //                System.gc();
             });
 
+            zkEnsemble.stopAllServers();
+            zkEnsemble.startAllServers();
             final boolean result = zkEnsemble.checkProperty(CONSISTENT_VALUES);
             Assert.assertTrue("All keys on all servers should have the same value", result);
         }
